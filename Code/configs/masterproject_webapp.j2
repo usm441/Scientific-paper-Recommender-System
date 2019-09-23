@@ -1,0 +1,6 @@
+[program:MasterProject]
+command = {{ clone_directory }}/gunicorn_start                	; Command to start app
+user = {{ user }}                                                       	; User to run as
+stdout_logfile = {{ clone_directory }}/logs/gunicorn_supervisor.log 				; Where to write log messages
+redirect_stderr = true                                            	; Save stderr in the same log
+environment=LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8                		; Set UTF-8 as default encoding

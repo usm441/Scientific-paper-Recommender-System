@@ -1,0 +1,194 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Master Project",
+		"_postman_id": "2c67ef5d-3887-a0dc-a85c-a8df298a38e2",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DBLP Publications",
+			"request": {
+				"url": {
+					"raw": "http://dblp.org/search/publ/api?q=machine learning&format=JSON",
+					"protocol": "http",
+					"host": [
+						"dblp",
+						"org"
+					],
+					"path": [
+						"search",
+						"publ",
+						"api"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "machine learning",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "format",
+							"value": "JSON",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Gets all publications\n\nhttp://dblp.uni-trier.de/faq/How+to+use+the+dblp+search+API.html"
+			},
+			"response": []
+		},
+		{
+			"name": "DBLP Author",
+			"request": {
+				"url": {
+					"raw": "http://dblp.org/search/author/api?q=Hannah Bast&format=json",
+					"protocol": "http",
+					"host": [
+						"dblp",
+						"org"
+					],
+					"path": [
+						"search",
+						"author",
+						"api"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Hannah Bast",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "format",
+							"value": "json",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Search authors"
+			},
+			"response": []
+		},
+		{
+			"name": "ARXIV",
+			"request": {
+				"url": {
+					"raw": "http://export.arxiv.org/api/query?search_query=ti:machine learning",
+					"protocol": "http",
+					"host": [
+						"export",
+						"arxiv",
+						"org"
+					],
+					"path": [
+						"api",
+						"query"
+					],
+					"query": [
+						{
+							"key": "search_query",
+							"value": "ti:machine learning",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Springer",
+			"request": {
+				"url": {
+					"raw": "http://api.springer.com/metadata/json?q=(journal:\"game theory\" AND title:\"perfect information\")&api_key=1f45958ec8fae951de568ac2d191d000",
+					"protocol": "http",
+					"host": [
+						"api",
+						"springer",
+						"com"
+					],
+					"path": [
+						"metadata",
+						"json"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "(journal:\"game theory\" AND title:\"perfect information\")",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "api_key",
+							"value": "1f45958ec8fae951de568ac2d191d000",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "-\thttps://dev.springer.com/adding-constraints"
+			},
+			"response": []
+		},
+		{
+			"name": "Plos API",
+			"request": {
+				"url": {
+					"raw": "http://api.plos.org/search?q=title:Machine Learning&wt=json",
+					"protocol": "http",
+					"host": [
+						"api",
+						"plos",
+						"org"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "title:Machine Learning",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "wt",
+							"value": "json",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "\tUsage examples found here\r\n\thttp://api.plos.org/solr/examples/\r\n"
+			},
+			"response": []
+		}
+	]
+}

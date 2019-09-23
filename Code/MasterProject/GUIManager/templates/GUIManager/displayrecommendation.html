@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}
+Recommendations for {{ algo }}
+{% endblock %}
+
+{% block content %}
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+      <!-- Code for showing REcommendation results -->
+
+<br>
+
+<h1 class="page-header">Recommendations from {{ algo }}</h1>
+   {% if message %}
+    <div class="alert alert-success" id="success-alert">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Recommendations generated! </strong>
+     You are requested to give feedback on these recommendations by clicking on Relevance column.
+    Your feedback will be recorded by system once you click on Submit at bottom of this page
+</div>
+    {% endif %}
+
+<form class="catalog" method="post" action="{% url 'process_feedback' %}">
+    <input type="hidden" name="recommendation_id" value="{{recommendation}}">
+    <input type="hidden" name="algo_id" value="{{algo.id}}">
+
+    <div class="container">
+        {% if Success %}
+        <div class="alert alert-success alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> {{ Success }}
+        </div>
+        {% elif Error %}
+        <div class="alert alert-danger alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Error!</strong> {{ Error }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Paper Title</th>
+                <th>Abstract</th>
+                <th>Published URL</th>
+
+                <th>Relevance</th>
+{#                <th>In your Catalog</th>#}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for rec in recommendations %}
+
+            <tr>
+                <td>{{rec.rank}}</td>
+                <td>{{rec.paper_title}}</td>
+                <!--- <td>{# {{ i.author_name for i in r[0].paper.paperauthors_set.all() }}  #}</td> --->
+                <td>{{rec.paper_abstract|truncatewords:10 }}
+<button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal">
+  complete abstract
+</button>
+
+                </td>
+
+
+
+            <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          X
+        </button>
+          <h3 class="modal-title" id="exampleModalLabel">Abstract</h3>
+             </div>
+      <div class="modal-body">
+        {{rec.paper_abstract}}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+                <td><a href="{% url 'external_url' %}?exurl={{ rec.paper_url }}&rec_id={{ rec.result_id }}&page={{ recommendations.number }}" target="_blank">
+                        {{rec.paper_url}}
+                    </a>
+                </td>
+
+                <td>
+
+                    {% if rec.rating > 0 %}
+                     <a href="#">
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" data-original-title="Marked Relevant Earlier"></span>
+                     </a>
+                        <label class="checkbox-inline">
+
+                        <input type="hidden" name="relevance_{{ rec.result_id }}" value="0">
+                            <input data-toggle="toggle" data-onstyle="success" data-size="small" data-on="Relevant" data-off="Not Relevant" type="checkbox" name="relevance_{{ rec.result_id }}"  value="1" checked>
+
+                        </label>
+
+                     {% elif rec.in_catalog == 'Yes' %}
+                     Part of catalog <br>
+                        <label class="checkbox-inline">
+
+                        <input type="hidden" name="relevance_{{ rec.result_id }}" value="0">
+                            <input data-toggle="toggle" data-onstyle="success" data-size="small" data-on="Relevant" data-off="Not Relevant" type="checkbox" name="relevance_{{ rec.result_id }}"  value="1" checked>
+
+
+                        </label>
+                    {% else%}
+                        <label class="checkbox-inline">
+                        <input type="hidden" name="relevance_{{ rec.result_id }}" value="0">
+                            <input data-toggle="toggle" data-onstyle="success" data-size="small" data-on="Relevant" data-off="Not Relevant" type="checkbox" name="relevance_{{ rec.result_id }}"  value="1">
+
+
+                        </label>
+                    {% endif %}
+
+
+                </td>
+{#                <td>#}
+{#                    {% if rec.in_catalog == 'No' %}#}
+{##}
+{##}
+{#                        <input data-toggle="toggle" data-size="small" data-on="Add" data-off="No" type="checkbox" name="Catalog_{{ rec.result_id }}" value="1">#}
+{##}
+{#                    {% elif rec.in_catalog == 'Yes' %}#}
+{#                    In catalog#}
+{#                    {% endif %}#}
+{##}
+{#                </td>#}
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+          </table>
+</div><hr>
+<div class="row">
+  <div class="col-md-2">
+      <button class="btn btn-success" id="dosubmit">Submit Feedback</button>
+             {% csrf_token %}
+             <input type="hidden" name="page" value="{{recommendations.number}}">
+
+  </div>
+      <div class="col-md-5 offset-1">
+         <b> Your feedback will NOT be recorded until you Submit it.</b>
+      </div>
+</div>
+      </form>
+
+
+{% if recommendations.has_other_pages %}
+<ul class="pagination">
+    {% if recommendations.has_previous %}
+    <li>
+        <a href="{% url 'display_recommendation' %}?rec_id={{ recommendation }}&page={{ recommendations.previous_page_number }}">&laquo;</a>
+    </li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in recommendations.paginator.page_range %}
+    {% if recommendations.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li><a href="{% url 'display_recommendation' %}?rec_id={{ recommendation }}&page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if users.has_next %}
+    <li>
+        <a href="{% url 'display_recommendation' %}?rec_id={{ recommendation }}&page={{ recommendations.next_page_number }}">&raquo;</a>
+    </li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+{% endif %}
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock %}

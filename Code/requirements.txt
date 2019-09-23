@@ -1,0 +1,16 @@
+django==1.11.3
+django_tables2
+mysqlclient
+gunicorn
+redis
+celery[redis]
+python-memcached
+nltk
+scipy
+scikit-learn
+sklearn
+numpy
+fuzzy
+pandas
+fuzzywuzzy
+requests

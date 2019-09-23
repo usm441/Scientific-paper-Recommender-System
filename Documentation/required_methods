@@ -1,0 +1,11 @@
+The below methods will be available in Helpers.db_helpers.py
+Required Methods:
+usman:
+get_recommendations(user_id, algorithm_id)
+get_algorithm_list()
+
+Hamiz:
+get_catalog(user_id)
+get_papers(num_of_papers)
+add_catalog(user_id,paper_id)
+remove_from_catalog(user_id,paper_id)

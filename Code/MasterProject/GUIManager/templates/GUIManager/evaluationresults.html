@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% block title %}
+  Evaluation Metrics
+{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" ></script>
+
+<div class="row">
+    <h2> <br> </h2>
+</div>
+    <div class="row">
+<h3>
+    Precision related metrics</h3>
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="Precision@10"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="Precision@20"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+         <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="Precision@30"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+         <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="Precision@40"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="Precision@50"></canvas>
+        </div>
+    </div>
+</div>
+<div class="row">
+<h3>
+    <br></h3>
+</div>
+
+    <div class="row">
+        <h3>
+    MRR related metrics
+        </h3>
+    </div>
+
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="MRR@10"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="MRR@20"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+         <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="MRR@30"></canvas>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <h3>
+    <br>
+    </h3>
+</div>
+
+
+    <div class="row">
+    <h3>
+    NDCG related metrics
+    </h3>
+    </div>
+
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="NDCG@10"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="NDCG@20"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+         <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="NDCG@30"></canvas>
+        </div>
+    </div>
+
+</div>
+
+    <div class="row">
+    <h3>
+    Click Through Rate related metrics
+    </h3>
+    </div>
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="chart-container" style="height:100%; width:100%">
+
+         <canvas id="ctr"></canvas>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+var data=[12, 19, 3]
+setchart("Precision@10",{{ p10_data }})
+setchart("Precision@20",{{ p20_data }})
+setchart("Precision@30",{{ p30_data }})
+setchart("Precision@40",{{ p40_data }})
+setchart("Precision@50",{{ p50_data }})
+setchart("MRR@10",{{ mrr10_data }})
+setchart("MRR@20",{{ mrr20_data }})
+setchart("MRR@30",{{ mrr30_data }})
+setchart("NDCG@10",{{ ndcg10_data }})
+setchart("NDCG@20",{{ ndcg20_data }})
+setchart("NDCG@30",{{ ndcg30_data }})
+setchart("ctr",{{ ctr_data }})
+function setchart(chartid,data){
+var ctx = document.getElementById(chartid).getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for k in precision_labels %}'{{ k|truncatechars:20 }}',{% endfor %}],
+        {#labels: {{ precision_labels|safe }},#}
+        datasets: [{
+            label: chartid,
+            data: data ,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+            display: false,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                },
+                scaleLabel: {
+                display:"True",
+                labelString:chartid
+        }
+            }],
+            xAxes: [{
+                    ticks: {
+                        autoSkip: false
+                            }
+                    }],
+
+        }
+    }
+});
+}
+</script>
+
+{% endblock %}

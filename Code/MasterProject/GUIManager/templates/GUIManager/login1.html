@@ -1,0 +1,46 @@
+{% load static %}
+{% load add_css %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ScipRecommender Login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'GUIManager/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'GUIManager/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'GUIManager/css/style.css' %}"/>
+
+</head>
+
+<body id="login-body" class="text-center">
+<form class="form-signin" method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h1><strong>ScipRecommender</strong></h1>
+    <!--<img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    {% if invalid_login %}
+        <h1 class="h4 text-danger">Invalid username or password</h1>
+    {% endif %}
+    <span style="float:left;"><label>Username</label></span>
+    <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+    <span style="float:left; padding-top:5px;"><label>Password</label></span>
+    <input type="password" name="password" class="form-control" placeholder="Password" required>
+    <div class="text-center">
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Sign in</button>
+            </div>
+            <div class="col-md-6">
+                    <a class="btn btn-lg btn-danger btn-block" href="{% url 'register' %}">Register</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

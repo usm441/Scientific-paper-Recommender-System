@@ -1,0 +1,10 @@
+#!/bin/bash
+
+NAME="PreonLab_webapp"                                                       				 # Name of the application
+DJANGODIR={{ webapp_directory }}                     								     # Django project directory
+
+# Activate the virtual environment
+cd $DJANGODIR
+source ../webapp_venv/bin/activate
+
+exec celery worker -A MasterProject -Q PaperManagerQueue --concurrency=4 --loglevel=debug

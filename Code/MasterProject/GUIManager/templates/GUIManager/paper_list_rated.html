@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}
+Search Results
+{% endblock %}
+{% load static %}
+
+{% block javascript %}
+
+{% endblock %}
+
+{% block content %}
+
+<BR>
+<h1 class="page-header">{{ title }}</h1>
+
+<div class="container">
+    {% for paper in paper_list %}
+    <div class="well">
+        <div class="media">
+            <div class="media-body">
+                <div class="list-inline list-unstyled">
+                    <li><h2 class="media-heading">{{ paper.title }}</h2></li>
+                    <li>
+                        <a href="{{ paper.paper_url }}" target="_blank">
+                            <img style="float:right" src="{% static 'GUIManager/assets/link.png' %}" width="15" />
+                        </a>
+                    </li>
+                </div>
+                <!--<h4 class="text-left">{{ paper.authors }}</h4>-->
+                <!--{% if not paper.journal_name == "" %}-->
+                    <!--<h5 class="text-left">Jounal: {{ paper.journal_name }}</h5>-->
+                <!--{% endif %}-->
+                <p>{{ paper.abstract }}</p>
+                <ul class="list-inline list-unstyled">
+                    <!--<li><span><i class="glyphicon glyphicon-calendar"></i> 2 days, 8 hours </span></li>-->
+                    <!--<li>|</li>-->
+                    <!--<span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>-->
+                    <!--<li>|</li>-->
+                    <li>
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star-empty"></span>-->
+                        {% if paper.in_catalog %}
+
+                            <button class="btn btn-success btn-sm" disabled>
+                                <span class="spinner"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+                                In Catalog
+                            </button>
+                        {% endif %}
+
+                        {% if not paper.in_catalog %}
+
+                        {% endif %}
+
+                    </li>
+                    <!--<li>|</li>-->
+                    <!--<li>-->
+                    <!--&lt;!&ndash; Use Font Awesome http://fortawesome.github.io/Font-Awesome/ &ndash;&gt;-->
+                    <!--<span><i class="fa fa-facebook-square"></i></span>-->
+                    <!--<span><i class="fa fa-twitter-square"></i></span>-->
+                    <!--<span><i class="fa fa-google-plus-square"></i></span>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if title == "Search Results" %}
+        <div class="media">
+            <div class="media-body">
+                <h3>Not what you are looking for?</h3>
+                <form method="GET" action="{% url 'external_search' %}">
+                    <button type="submit" id="singlebutton" name="singlebutton" class="btn btn-danger inline btn-md">Try external
+                        search
+                    </button>
+                    {% csrf_token %}
+                </form>
+
+
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

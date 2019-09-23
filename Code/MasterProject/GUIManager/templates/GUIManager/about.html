@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'GUIManager/fonts/' %}">
+
+
+    <title>{% block title %}SciPR Home{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'GUIManager/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'GUIManager/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'GUIManager/css/style.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Custom styles for this template -->
+</head>
+
+<body>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'home' %}">SciPRecommender</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% if user.is_superuser %}<li><a href="{% url 'algorithms_table' %}">Algorithms</a></li>{% endif %}
+                <li class="active"><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li>
+                    <form class="navbar-form navbar-left" role="search" method="GET" action="{% url 'search' %}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Title" name="search_query">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                    </form>
+            </li>
+
+
+          </ul>
+            <ul class="nav navbar-nav navbar-right">
+               <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'show_catalog' %}">My Catalog</a></li>
+                    <li><a href="{% url 'show_rated_papers' %}">Rated papers</a></li>
+
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Email: {{ user.email }}</li>
+
+                        {% if user.is_superuser %}
+                    <li>
+
+                <a type="button" class="btn btn-primary" href={% url 'add_user' %}>Add User</a></li>
+                   <li><a href="{% url 'evaluation_results' %}">Evaluation Results</a></li>
+                    <li><a href="{% url 'feedback_ratings' %}">Evaluation Manager</a></li>
+                        {% endif %}
+
+
+
+                  </ul>
+            </li>
+                <li><a href={% url 'logout' %}>Logout</a> </li>
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+    {% block content %}
+    <div class="jumbotron">
+    <div class="jumbotron">
+        <h1>SciPRec </h1>
+          <h2>An Online Scientific Paper Recommendation and Algorithm Evaluation system</h2>
+        <p>A Web application that provides scientific papers recommendations for researchers and scholars. It enables running user studies and online evaluations of different recommendation algorithms. </p>
+
+      </div>
+    {% endblock %}
+
+    <div style="margin-bottom:80px;"></div>
+
+</div> <!-- /container -->
+
+<nav class="navbar navbar-default navbar-fixed-bottom" style="background-color:#eceaea;">
+    <div class="container">
+        <h5 class="text-center" style="padding-top:8px;">All rights reserved</h5>
+    </div>
+
+</nav>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="{% static 'GUIManager/js/bootstrap.js' %}"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+{% block javascript %} {% endblock %}
+
+</body>
+
+</html>

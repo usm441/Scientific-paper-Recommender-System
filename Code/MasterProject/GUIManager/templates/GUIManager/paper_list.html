@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block title %}
+Search Results
+{% endblock %}
+{% load static %}
+
+{% block javascript %}
+<script>
+$(function() {
+        console.log("wah");
+        $(".has-spinner").click(function(){
+        var context = this;
+        $(this).toggleClass('active');
+        $(this).prop('disabled', true);
+
+            $.ajax({
+        			url: "/add_to_catalog/",
+        			data: { 'paper_title': $(this).val() },
+        			dataType: 'json',
+        			success: function (data) {
+            			//modified_html = '<button class="btn btn-success btn-sm catalog_btn"> Catalog</button>';
+            			$(context).removeClass("btn-primary");
+                        $(context).addClass("btn-success");
+                        $(context).html("In Catalog");
+                        $(context).prop('disabled', true);
+                        $(context).toggleClass('active');
+        			},
+        			error: function(data) { $('context').toggleClass('active');}
+      			});
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<BR>
+<h1 class="page-header">{{ title }}</h1>
+
+<div class="container">
+    {% if title == "Search Results from local database" %}
+        {% if paper_list|length == 0 %}
+             <div class="media">
+                <div class="media-body">
+                    <div class="jumbotron">
+                        <h4 class="text-center">We did not find results in our local database for your query "{{ query }}". Please try external
+                        search to check in external digital libraries</h4>
+                    </div>
+                </div>
+             </div>
+        {% endif %}
+
+        {% if paper_list|length == 1 %}
+            <div class="alert alert-success">
+                <p>We found following paper which exactly matches your query</p>
+            </div>
+        {% endif %}
+
+        {% if paper_list|length > 1 %}
+            <div class="alert alert-warning">
+                <p>We could not find exact paper with title matching your query "{{ query }}". Here are some additional results which we
+                    found relevant.</p>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% if title == "Search Results from external sources" %}
+    <h4>Sources: IEEE, PLOS, arXiv and Springer</h4>
+        {% if paper_list|length == 0 %}
+             <div class="media">
+                <div class="media-body">
+                    <div class="jumbotron">
+                        <h4 class="text-center">We did not find additional results in external search for your query "{{ query }}".</h4>
+                    </div>
+                </div>
+             </div>
+        {% endif %}
+
+        {% if paper_list|length == 1 %}
+            <div class="alert alert-success">
+                <p>We found following paper which exactly matches your query from external search</p>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% if title == "Catalog Papers" %}
+        {% if paper_list|length == 0 %}
+             <div class="media">
+                <div class="media-body">
+                    <div class="jumbotron">
+                        <h4 class="text-center">You haven't added any paper in your Catalog. Kindly add papers and check again.</h4>
+                    </div>
+                </div>
+             </div>
+        {% endif %}
+    {% endif %}
+
+    {% for paper in paper_list %}
+    <div class="well">
+        <div class="media">
+            <div class="media-body">
+                <div class="list-inline list-unstyled">
+                    <li><h2 class="media-heading">{{ paper.display_title }}</h2></li>
+                    <li>
+                        <a href="{{ paper.paper_url }}" target="_blank">
+                            <img style="float:right" src="{% static 'GUIManager/assets/link.png' %}" width="15" />
+                        </a>
+                    </li>
+                    {% if title == "Search Results from external sources" %}
+                        <li><p>{{ paper.source }}</p></li>
+                    {% endif %}
+                </div>
+                <h5 class="text-left">{{ paper.authors }}</h5>
+                {% if not paper.journal_name == "" %}
+                    <h5 class="text-left">Jounal: {{ paper.journal_name }}</h5>
+                {% endif %}
+                <p>{{ paper.abstract }}</p>
+                <ul class="list-inline list-unstyled">
+                    <!--<li><span><i class="glyphicon glyphicon-calendar"></i> 2 days, 8 hours </span></li>-->
+                    <!--<li>|</li>-->
+                    <!--<span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>-->
+                    <!--<li>|</li>-->
+                    <li>
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star"></span>-->
+                        <!--<span class="glyphicon glyphicon-star-empty"></span>-->
+                        {% if paper.in_catalog %}
+
+                            <button class="btn btn-success btn-sm" disabled>
+                                <span class="spinner"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+                                In Catalog
+                            </button>
+                        {% endif %}
+
+                        {% if not paper.in_catalog %}
+                            <button type="submit" class="btn btn-primary btn-sm has-spinner" name="paper_title" value="{{ paper.title }}">
+                                <span class="spinner"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+                                Add to My Catalog
+                            </button>
+                        {% endif %}
+
+                    </li>
+                    <!--<li>|</li>-->
+                    <!--<li>-->
+                    <!--&lt;!&ndash; Use Font Awesome http://fortawesome.github.io/Font-Awesome/ &ndash;&gt;-->
+                    <!--<span><i class="fa fa-facebook-square"></i></span>-->
+                    <!--<span><i class="fa fa-twitter-square"></i></span>-->
+                    <!--<span><i class="fa fa-google-plus-square"></i></span>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if title == "Search Results from local database" %}
+        <div class="media">
+            <div class="media-body">
+                {% if paper_list|length > 0 %}
+                    <h3>Not what you are looking for?</h3>
+                {% endif %}
+                <form method="GET" action="{% url 'external_search' %}">
+                    <button type="submit" id="singlebutton" name="singlebutton" class="btn btn-danger inline btn-md">Try external
+                        search
+                    </button>
+                    {% csrf_token %}
+                </form>
+
+
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}
+  Evaluation Manager
+{% endblock %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" ></script>
+
+<div class="row">
+    <h2> <br> </h2>
+<div class="container">
+        {% if Success %}
+        <div class="alert alert-success alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> {{ Success }}
+        </div>
+        {% elif Error %}
+        <div class="alert alert-danger alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Error!</strong> {{ Error }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#System_Recommendations">System Recommendations</a></li>
+  <li><a data-toggle="tab" href="#menu1">Feedback to Rating</a></li>
+  <li><a data-toggle="tab" href="#menu2">Display Algorithms</a></li>
+
+</ul>
+
+<div class="tab-content">
+  <div id="System_Recommendations" class="tab-pane fade in active">
+    <div><br>
+        <H4>Select the algorithm which should be the default algorithm for SCIPREC recommendation.
+            To disable system recommendation, Choose 'None' in Select Algorithm List</H4>
+    </div>
+     <form method="post" action="{% url 'update_system_rec' %}">
+      <div class="form-group">
+      <div class="row">
+      <div class="col-sm-4">
+       <label for="sel1">Select Algorithm:</label>
+       <select class="form-control" name="algo_id" id="sel1">
+        <option value="">None</option>
+           {% for a in all_algorithms %}
+        <option value="{{ a.id }}">{{ a.name }}</option>
+        {% endfor %}
+       </select>
+    </div> <div class="col-sm-4">
+     <label for="comment">Comment or User Study ID:</label>
+     <textarea class="form-control" rows="1" id="comment" name="comment"></textarea>
+     <br>
+      </div></div>
+     <button class="btn btn-success" id="dosubmit">Update System Recommendation</button>
+             {% csrf_token %}
+     </div>
+     </form>
+<div class="table-responsive">
+    <h4>Past SCIPREC Algorithms</h4> <a href="{% url 'evaluation_results'%}?results=systemrecommendation" >
+    Show Results
+    </a>
+        <table class="table table-striped">
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Algorithm Name</th>
+                <th>Comment</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Created_By</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for psa in past_system_algo %}
+
+            <tr>
+                <td>{{psa.id}}</td>
+                <td>{{psa.algorithm.name}}</td>
+                <td>{{psa.comments}}</td>
+                <td>{{psa.created_on}}</td>
+                {% if psa.isactive == True %}
+                <td>ACTIVE</td>
+                {% else %}
+                <td>{{psa.modified_on}}</td>
+                {% endif %}
+                <td>{{psa.modified_by}}</td>
+
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+
+
+
+  </div>
+  <div id="menu1" class="tab-pane fade">
+    <h3>Feedback to Rating Conversion</h3>
+      <div class="table-responsive">
+        <table class="table table-striped">
+
+            <thead>
+            <tr>
+                <th>ALgorithm Name</th>
+                <th>Rating Count</th>
+
+            </tr>
+            </thead>
+            <tbody>
+                {% for r in ratings %}
+                    <tr>
+                    <td>{{r.name}}</td>
+                    <td>{{r.ratings}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    <div>
+        Rating Matrix count: {{ratingmatrix}}
+    </div>
+    <div>Ratings shall be transferred from User-Feedback  into RatingMatrix <br>
+        <br>
+    </div>
+    <form method="post" action="{% url 'convert_feedback' %}">
+    <button class="btn btn-success" id="dosubmit">Convert Feedback to Ratings</button>
+             {% csrf_token %}
+    </form>
+  </div>
+
+<div id="menu2" class="tab-pane fade">
+    <h3>Algorithms to displayto User</h3>
+{#    <form method="post" action="#{% url 'update_system_rec' %}">#}
+      <div class="form-group">
+      <div class="row">
+      <div class="col-sm-4">
+       <label for="sel1">Select Algorithm:</label> <br>
+        {% for a in all_algorithms %}
+          <input type="checkbox" name="algorithms" value="{{ a.id }}" checked>{{ a.name }}
+
+
+        {% endfor %}
+
+        <br><br>
+     <button class="btn btn-success" id="dosubmit">Update Display Algorithms</button>
+             {% csrf_token %}
+     </div>
+     </form>
+  </div>
+</div>
+
+
+{% endblock %}
