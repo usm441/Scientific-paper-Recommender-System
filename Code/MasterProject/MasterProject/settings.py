@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'sciprec_db',
         'USER': 'sciprec_user',
         'PASSWORD': 'Sciprec2018',
-        'HOST': '132.230.150.13',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
     #
